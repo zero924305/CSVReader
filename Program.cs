@@ -29,7 +29,7 @@ namespace CSVReader
 
                 var concatenatedValues = String.Join(',', list.Select(x => "'" + x + "'"));
 
-                queryData.Add("(" + concatenatedValues + "),\n");
+                queryData.Add("(" + concatenatedValues + ")");
             }
 
             return string.Join(",\n", queryData); ;
