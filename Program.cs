@@ -61,6 +61,8 @@ namespace CSVReader
 
             foreach (string x in header)
             {
+                if (x.Length > 128) x.Substring(0, 128);
+
                 queryHeader += " [" + x + "] Varchar(MAX),\n";
             }
             queryHeader = queryHeader.Remove(queryHeader.Length - 2) + "\n)";
