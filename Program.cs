@@ -14,8 +14,9 @@ namespace CSVReader
         public static async Task<string> GetDataRecord(List<object> lccs, string queryname)
         {
             List<string> queryData = new();
+            List<string> datachunk = new();
             string insertIntoTable = "insert into " + queryname + " values \n";
-
+            string sqlStatement = "";
             foreach (System.Dynamic.ExpandoObject ex in lccs)
             {
                 List<string> list = ex.Select(x => x.Value.ToString().Trim()).ToList();
@@ -33,9 +34,27 @@ namespace CSVReader
 
                 queryData.Add("(" + concatenatedValues + ")");
             }
-            insertIntoTable += string.Join(",\n", queryData);
+            sqlStatement = await SplitDataRow(queryData, insertIntoTable, sqlStatement, datachunk);
 
-            return await Task.FromResult(insertIntoTable);
+            return await Task.FromResult(sqlStatement);
+        }
+
+        private async static Task<string> SplitDataRow(List<string> queryData, string insertIntoTable, string sqlStatement, List<string> datachunk)
+        {
+            for (int i = 0; i < queryData.Count; i++)
+            {
+                //split for each 800 rows
+                if (i % 800 == 0 && i > 0)
+                {
+                    sqlStatement += insertIntoTable + string.Join(",\n", datachunk) + "\n\n";
+                    datachunk.Clear();
+                }
+                datachunk.Add(queryData.ElementAt(i));
+            }
+
+            if (datachunk.Count > 0)
+                sqlStatement += insertIntoTable + string.Join(",\n", datachunk);
+            return await Task.FromResult(sqlStatement);
         }
 
         public static async Task<string[]> GetHeader(string reader)
