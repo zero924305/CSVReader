@@ -15,11 +15,11 @@ namespace CSVReader
         {
             List<string> queryData = new();
             List<string> datachunk = new();
-            string insertIntoTable = "insert into " + queryname + " values \n";
-            string sqlStatement = "";
+            var insertIntoTable = "insert into " + queryname + " values \n";
+            var sqlStatement = "";
             foreach (System.Dynamic.ExpandoObject ex in lccs)
             {
-                List<string> list = ex.Select(x => x.Value.ToString().Trim()).ToList();
+                List<string> list = ex.Select(x => x.Value?.ToString()?.Trim()).ToList();
 
                 list = list.Select(x =>
                        x.Replace("\\'", "'")
@@ -39,7 +39,7 @@ namespace CSVReader
             return await Task.FromResult(sqlStatement);
         }
 
-        private async static Task<string> SplitDataRow(List<string> queryData, string insertIntoTable, string sqlStatement, List<string> datachunk)
+        public static async Task<string> SplitDataRow(List<string> queryData, string insertIntoTable, string sqlStatement, List<string> datachunk)
         {
             for (int i = 0; i < queryData.Count; i++)
             {
@@ -96,26 +96,26 @@ namespace CSVReader
             return await Task.FromResult(rows);
         }
 
-        private static async void Main(string[] args)
+        private static async Task Main()
         {
             //file location
-            var csv = @"csvlocation";
+            const string csv = @"csvlocation";
 
             //Create a tempTableName
-            string tempTableName = "#" + csv.Trim().Replace(".", "").Replace(" ", string.Empty);
+            var tempTableName = "#" + csv.Trim().Replace(".", "").Replace(" ", string.Empty);
 
-            //Get Csv Header
-            string[] header = await GetHeader(csv);
-            string queryHeader = await GetSqlHeader(header, tempTableName);
+            //Get CSV Header
+            var header = await GetHeader(csv);
+            var queryHeader = await GetSqlHeader(header, tempTableName);
 
-            //Get Csv Data
+            //Get CSV Data
             List<object> sqlRow = await GetsqlRecord(csv);
-            string sqldata = await GetDataRecord(sqlRow, tempTableName);
+            var sqlData = await GetDataRecord(sqlRow, tempTableName);
 
             //Full Temp SQL Query
-            string tempSQLQuery = queryHeader + "\n" + sqldata;
+            var tempSqlQuery = queryHeader + "\n" + sqlData;
             //Output result
-            Console.WriteLine(tempSQLQuery);
+            Console.WriteLine(tempSqlQuery);
         }
     }
 }
