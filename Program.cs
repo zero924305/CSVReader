@@ -96,13 +96,26 @@ namespace CSVReader
             return await Task.FromResult(rows);
         }
 
+        public static async Task<string> RemoveSpecialCharacters(this string str)
+        {
+            StringBuilder sb = new();
+            foreach (char c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                {
+                    sb.Append(c);
+                }
+            }
+            return await Task.FromResult(sb.ToString());
+        }
+
         private static async Task Main()
         {
             //file location
             const string csv = @"csvlocation";
 
             //Create a tempTableName
-            var tempTableName = "#" + csv.Trim().Replace(".", "").Replace(" ", string.Empty);
+            var tempTableName = "#" + RemoveSpecialCharacters(csv.Trim().Replace(".", "").Replace(" ", string.Empty));
 
             //Get CSV Header
             var header = await GetHeader(csv);
