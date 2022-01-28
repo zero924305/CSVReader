@@ -96,7 +96,7 @@ namespace CSVReader
             return await Task.FromResult(rows);
         }
 
-        public static async Task<string> RemoveSpecialCharacters(this string str)
+        public static async Task<string> RemoveSpecialCharacters(string str)
         {
             StringBuilder sb = new();
             foreach (char c in str)
