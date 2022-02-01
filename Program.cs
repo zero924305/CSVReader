@@ -11,7 +11,6 @@ namespace CSVReader
 {
     internal class Program
     {
-        private static dynamic rows;
 
         public static async Task<string> GetDataRecord(List<object> lccs, string queryname)
         {
@@ -114,7 +113,7 @@ namespace CSVReader
         private static async Task Main()
         {
             //file location
-            const string csv = @"C:\Users\Administrator\Documents\Import File for Master Targets.csv";
+            const string csv = @"location";
 
             try
             {
