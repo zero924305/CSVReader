@@ -11,6 +11,8 @@ namespace CSVReader
 {
     internal class Program
     {
+        private static dynamic rows;
+
         public static async Task<string> GetDataRecord(List<object> lccs, string queryname)
         {
             List<string> queryData = new();
@@ -99,23 +101,38 @@ namespace CSVReader
         private static async Task Main()
         {
             //file location
-            const string csv = @"csvlocation";
+            const string csv = @"C:\Users\Administrator\Documents\Import File for Master Targets.csv";
 
-            //Create a tempTableName
-            var tempTableName = "#" + csv.Trim().Replace(".", "").Replace(" ", string.Empty);
+            try
+            {
+                //Create a tempTableName
+                var tempTableName = "#" + csv.Trim().Replace(".", "").Replace(" ", string.Empty);
 
-            //Get CSV Header
-            var header = await GetHeader(csv);
-            var queryHeader = await GetSqlHeader(header, tempTableName);
+                //Get CSV Header
+                var header = await GetHeader(csv);
+                var queryHeader = await GetSqlHeader(header, tempTableName);
 
-            //Get CSV Data
-            List<object> sqlRow = await GetsqlRecord(csv);
-            var sqlData = await GetDataRecord(sqlRow, tempTableName);
+                //Get CSV Data
+                List<object> sqlRow = await GetsqlRecord(csv);
+                var sqlData = await GetDataRecord(sqlRow, tempTableName);
 
-            //Full Temp SQL Query
-            var tempSqlQuery = queryHeader + "\n" + sqlData;
-            //Output result
-            Console.WriteLine(tempSqlQuery);
+                //Full Temp SQL Query
+                var tempSqlQuery = queryHeader + "\n" + sqlData;
+                //Output result
+                Console.WriteLine(tempSqlQuery);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (CsvHelperException ex)
+            {
+                Console.WriteLine(ex.InnerException.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
