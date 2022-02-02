@@ -117,6 +117,14 @@ namespace CSVReader
 
             try
             {
+                //throw exception if the file cannot be found
+                if (csv is null)
+                    throw new NullReferenceException("Cant find CSV location");
+
+                //Throw exception if the file is not CSV format
+                if (!csv.Contains(".csv", StringComparison.OrdinalIgnoreCase))
+                    throw new ArgumentException(@"This file '" + csv + "' is not CSV format");
+
                 //Create a tempTableName
                 var tempTableName = "#" + RemoveSpecialCharacters(csv.Trim().Replace(".", "").Replace(" ", string.Empty));
 
