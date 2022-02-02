@@ -97,7 +97,7 @@ namespace CSVReader
             return await Task.FromResult(rows);
         }
 
-        public static async Task<string> RemoveSpecialCharacters(string str)
+        public static string RemoveSpecialCharacters(string str)
         {
             StringBuilder sb = new();
             foreach (char c in str)
@@ -107,7 +107,7 @@ namespace CSVReader
                     sb.Append(c);
                 }
             }
-            return await Task.FromResult(sb.ToString());
+            return sb.ToString();
         }
 
         private static async Task Main()
@@ -118,7 +118,7 @@ namespace CSVReader
             try
             {
                 //Create a tempTableName
-                var tempTableName = "#" + csv.Trim().Replace(".", "").Replace(" ", string.Empty);
+                var tempTableName = "#" + RemoveSpecialCharacters(csv.Trim().Replace(".", "").Replace(" ", string.Empty));
 
                 //Get CSV Header
                 var header = await GetHeader(csv);
