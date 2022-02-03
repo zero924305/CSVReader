@@ -117,7 +117,7 @@ namespace CSVReader
 
             try
             {
-                //throw exception if the file cannot be found
+                //throw exception if the file location cannot be found
                 if (csv is null)
                     throw new NullReferenceException("Cant find CSV location");
 
