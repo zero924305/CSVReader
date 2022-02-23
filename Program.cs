@@ -80,9 +80,13 @@ namespace CSVReader
                 queryHeadBuilder.Append("DROP TABLE IF EXISTS " + queryname + "\n");
                 queryHeadBuilder.Append("CREATE TABLE " + queryname + "\n");
                 queryHeadBuilder.Append("(\n [tempuniqueID] [int] IDENTITY(1,1) NOT NULL,\n");
+            int count = 0;
 
             foreach (string x in header)
-                queryHeadBuilder.Append(" [" + (x.Length > 128 ? x.Substring(0, 127) : x) + "] Varchar(MAX),\n");
+            {
+                count++;
+                queryHeadBuilder.Append(" [" + count + "_" + (x.Length > 128 ? x.Substring(0, 100) : x) + "] Varchar(MAX),\n");
+            }
 
             string queryHeader = queryHeadBuilder.ToString().Remove(queryHeadBuilder.Length - 2) + "\n)";
 
